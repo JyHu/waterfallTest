@@ -37,6 +37,19 @@
  */
 @property (assign, nonatomic) NSInteger p_cellCount;
 
+/**
+ *  @author JyHu, 15-07-02 18:07:37
+ *
+ *  所要计算的瀑布流的CollectionView的大小
+ *
+ *  @since  v 1.0
+ */
+@property (assign, nonatomic) CGSize p_contentSize;
+
+@property (retain, nonatomic) NSMutableArray *p_layoutAttributes;
+
+@property (assign, nonatomic) NSInteger p_reloadBeginIndex;
+
 @end
 
 @implementation AUUCollectionViewLayout
@@ -49,13 +62,17 @@
 
 @synthesize fallInSection = _fallInSection;
 
-@synthesize contentSize = _contentSize;
+@synthesize p_contentSize = _p_contentSize;
 
 @synthesize p_itemWidth = _p_itemWidth;
 
 @synthesize p_yOriginsOfRowsArr = _p_yOriginsOfRowsArr;
 
 @synthesize p_cellCount = _p_cellCount;
+
+@synthesize p_layoutAttributes = _p_layoutAttributes;
+
+@synthesize p_reloadBeginIndex = _p_reloadBeginIndex;
 
 
 - (id)init
@@ -66,25 +83,24 @@
     {
         _numberOfRows = 2;
         _interval = 10;
-        _contentSize = [[UIScreen mainScreen] bounds].size;
         _p_yOriginsOfRowsArr = [[NSMutableArray alloc] init];
+        _p_layoutAttributes = [[NSMutableArray alloc] init];
         _fallInSection = 0;
     }
     return self;
 }
 
+#pragma mark - UICollectionViewLayout methods
+
 - (void)prepareLayout
 {
     [super prepareLayout];
     
-    if (_layoutDelegate && [_layoutDelegate respondsToSelector:@selector(selectionIndexOfCollectionView:)])
-    {
-        _fallInSection = [_layoutDelegate selectionIndexOfCollectionView:self.collectionView];
-    }
+    _p_contentSize = self.collectionView.frame.size;
     
     _p_cellCount = [self.collectionView numberOfItemsInSection:_fallInSection];
     
-    _p_itemWidth = (_contentSize.width - (_numberOfRows + 1) * _interval) / (_numberOfRows * 1.0);
+    _p_itemWidth = (_p_contentSize.width - (_numberOfRows + 1) * _interval) / (_numberOfRows * 1.0);
 }
 
 - (CGSize)collectionViewContentSize
@@ -96,12 +112,26 @@
         maxY = [[_p_yOriginsOfRowsArr objectAtIndex:[self higherRowIndex]] floatValue];
     }
     
-    return CGSizeMake(_contentSize.width, maxY);
+    if (maxY < _p_contentSize.height)
+    {
+        maxY = _p_contentSize.height + 1;
+    }
+    
+    return CGSizeMake(_p_contentSize.width, maxY);
 }
 
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
+    // 逻辑需要待处理，不能每次滚动的时候都重新计算，这样会浪费内存、浪费时间。
+    
+    // --------------------------->
+    
     NSMutableArray *attributes = [[NSMutableArray alloc] init];
+    
+    if (_p_yOriginsOfRowsArr)
+    {
+        [_p_yOriginsOfRowsArr removeAllObjects];
+    }
     
     for (NSInteger i = 0; i < self.numberOfRows; i ++)
     {
@@ -116,6 +146,8 @@
     }
     
     return attributes;
+    
+    // <----------------------------
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -135,8 +167,6 @@
     [self updateYOrigin:(y + _interval + itemHeight) inRow:row];
     
     attributes.frame = CGRectMake(x, y, _p_itemWidth, itemHeight);
-    
-    NSLog(@"%@", NSStringFromCGRect(attributes.frame));
     
     return attributes;
 }
@@ -185,6 +215,25 @@
     {
         [_p_yOriginsOfRowsArr replaceObjectAtIndex:row withObject:@(y)];
     }
+}
+
+#pragma mark - setter methods
+
+- (void)setNumberOfRows:(NSInteger)numberOfRows
+{
+    _numberOfRows = (numberOfRows < 2 ? 2 : numberOfRows);
+}
+
+- (void)setInterval:(CGFloat)interval
+{
+    _interval = (interval < 0 ? 10 : interval);
+}
+
+- (void)setFallInSection:(NSInteger)fallInSection
+{
+    NSInteger secs = [self.collectionView numberOfSections];
+    
+    _fallInSection = ((fallInSection > 0 && fallInSection < secs) ? fallInSection : 0);
 }
 
 @end

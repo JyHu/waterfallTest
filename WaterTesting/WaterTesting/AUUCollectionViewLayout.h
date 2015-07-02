@@ -16,21 +16,6 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout sizeOfItemAtIndexPath:(NSIndexPath *)indexPath;
 
-@optional
-
-/**
- *  @author JyHu, 15-07-02 18:07:14
- *
- *  取得当前需要做瀑布流的section
- *
- *  @param collectionView UICollectionView
- *
- *  @return section
- *
- *  @since  v 1.0
- */
-- (NSInteger)selectionIndexOfCollectionView:(UICollectionView *)collectionView;
-
 @end
 
 @interface AUUCollectionViewLayout : UICollectionViewLayout
@@ -71,13 +56,8 @@
  */
 @property (assign, nonatomic) NSInteger fallInSection;
 
-/**
- *  @author JyHu, 15-07-02 18:07:37
- *
- *  所要计算的瀑布流的CollectionView的大小
- *
- *  @since  v 1.0
- */
-@property (assign, nonatomic) CGSize contentSize;
+- (void)reloadAllData;
+
+- (void)appendDataFromIndex:(NSInteger)index;
 
 @end

@@ -16,6 +16,7 @@
 UICollectionViewDelegate,
 UICollectionViewDataSource,
 AUUCollectionViewLayoutDelegate
+//MyCollectionViewLayoutDelegate
 >
 
 @property (strong, nonatomic) UICollectionView *collectionView;
@@ -46,7 +47,7 @@ AUUCollectionViewLayoutDelegate
 
 - (void)addDataSource
 {
-    for (NSInteger i = 0; i < 150 ; i ++)
+    for (NSInteger i = 0; i < 20 ; i ++)
     {
         [_dataSource addObject:@"1"];
         
@@ -59,7 +60,7 @@ AUUCollectionViewLayoutDelegate
 {
 #ifdef MoreRows
     AUUCollectionViewLayout *layout = [[AUUCollectionViewLayout alloc] init];
-    layout.numberOfRows = 7;
+    layout.numberOfRows = 4;
     layout.layoutDelegate = self;
 #else
     MyCollectionViewLayout *layout = [[MyCollectionViewLayout alloc] init];
@@ -78,7 +79,7 @@ AUUCollectionViewLayoutDelegate
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -160,9 +161,9 @@ AUUCollectionViewLayoutDelegate
     
     if (excursion >= 60)
     {
-//        [self addDataSource];
+        [self addDataSource];
         
-//        [self.collectionView reloadData];
+        [self.collectionView reloadData];
     }
 }
 
