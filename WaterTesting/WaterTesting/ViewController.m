@@ -8,8 +8,15 @@
 
 #import "ViewController.h"
 #import "MyCollectionViewLayout.h"
+#import "AUUCollectionViewLayout.h"
+#import "Control.h"
 
-@interface ViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, MyCollectionViewLayoutDelegate>
+@interface ViewController ()
+<
+UICollectionViewDelegate,
+UICollectionViewDataSource,
+AUUCollectionViewLayoutDelegate
+>
 
 @property (strong, nonatomic) UICollectionView *collectionView;
 
@@ -39,7 +46,7 @@
 
 - (void)addDataSource
 {
-    for (NSInteger i = 0; i < 15 ; i ++)
+    for (NSInteger i = 0; i < 150 ; i ++)
     {
         [_dataSource addObject:@"1"];
         
@@ -50,8 +57,14 @@
 
 - (void)initializeUserInterface
 {
+#ifdef MoreRows
+    AUUCollectionViewLayout *layout = [[AUUCollectionViewLayout alloc] init];
+    layout.numberOfRows = 7;
+    layout.layoutDelegate = self;
+#else
     MyCollectionViewLayout *layout = [[MyCollectionViewLayout alloc] init];
     layout.layoutDelegate = self;
+#endif
     
     CGRect rect = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
     _collectionView = [[UICollectionView alloc] initWithFrame:rect collectionViewLayout:layout];
@@ -65,7 +78,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -77,30 +90,42 @@
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reUsefulCollectionViewCell" forIndexPath:indexPath];
     
-    NSLog(@"%@",NSStringFromCGRect(cell.frame));
+//    NSLog(@"%@",NSStringFromCGRect(cell.frame));
     
-    CGRect rect = cell.frame;
-
-    CGFloat radius = 0;
     
-    if (rect.size.width > rect.size.height)
-    {
-        radius = rect.size.height / 2.0;
-    }
-    else
-    {
-        radius = rect.size.width / 2.0;
-    }
-    
-    cell.layer.masksToBounds = YES;
-    cell.layer.borderColor = [UIColor whiteColor].CGColor;
-    cell.layer.borderWidth = 3;
-    cell.layer.cornerRadius = radius;
+//    CGRect rect = cell.frame;
+//
+//    CGFloat radius = 0;
+//    
+//    if (rect.size.width > rect.size.height)
+//    {
+//        radius = rect.size.height / 2.0;
+//    }
+//    else
+//    {
+//        radius = rect.size.width / 2.0;
+//    }
+//    
+//    cell.layer.masksToBounds = YES;
+//    cell.layer.borderColor = [UIColor whiteColor].CGColor;
+//    cell.layer.borderWidth = 3;
+//    cell.layer.cornerRadius = radius;
     
     cell.backgroundColor = [UIColor colorWithRed:(arc4random() % 255 / 255.0) green:(arc4random() % 255 / 255.0) blue:(arc4random() % 255 / 255.0) alpha:1];
     
     return cell;
 }
+
+#ifdef MoreRows
+
+#pragma mark - AUUCollectionViewDelegate
+
+- (CGSize)collectionView:(UICollectionView *)collectionView collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout sizeOfItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake((SCREEN_WIDTH - 30) / 2.0, [_itemHeights[indexPath.row] floatValue]);
+}
+
+#else
 
 #pragma mark - MyCollectionViewLayoutDelegate
 
@@ -108,6 +133,8 @@
 {
     return CGSizeMake((SCREEN_WIDTH - 30) / 2.0, [_itemHeights[indexPath.row] floatValue]);
 }
+
+#endif
 
 #pragma mark - UIScrollViewDelegate
 
@@ -133,9 +160,9 @@
     
     if (excursion >= 60)
     {
-        [self addDataSource];
+//        [self addDataSource];
         
-        [self.collectionView reloadData];
+//        [self.collectionView reloadData];
     }
 }
 

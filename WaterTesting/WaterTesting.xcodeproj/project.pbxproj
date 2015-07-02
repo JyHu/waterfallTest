@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C696AC61B4536F600A015B1 /* AUUCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C696AC51B4536F600A015B1 /* AUUCollectionViewLayout.m */; };
 		1C93EE0A1B44E4A3008EE85C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C93EE091B44E4A3008EE85C /* main.m */; };
 		1C93EE0D1B44E4A3008EE85C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C93EE0C1B44E4A3008EE85C /* AppDelegate.m */; };
 		1C93EE101B44E4A3008EE85C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C93EE0F1B44E4A3008EE85C /* ViewController.m */; };
@@ -28,6 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C696AC41B4536F600A015B1 /* AUUCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUUCollectionViewLayout.h; sourceTree = "<group>"; };
+		1C696AC51B4536F600A015B1 /* AUUCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AUUCollectionViewLayout.m; sourceTree = "<group>"; };
+		1C696AC71B45441400A015B1 /* Control.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
 		1C93EE041B44E4A3008EE85C /* WaterTesting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WaterTesting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C93EE081B44E4A3008EE85C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C93EE091B44E4A3008EE85C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -90,6 +94,9 @@
 				1C93EE0F1B44E4A3008EE85C /* ViewController.m */,
 				1C93EE2D1B44E4C4008EE85C /* MyCollectionViewLayout.h */,
 				1C93EE2E1B44E4C4008EE85C /* MyCollectionViewLayout.m */,
+				1C696AC41B4536F600A015B1 /* AUUCollectionViewLayout.h */,
+				1C696AC51B4536F600A015B1 /* AUUCollectionViewLayout.m */,
+				1C696AC71B45441400A015B1 /* Control.h */,
 				1C93EE111B44E4A3008EE85C /* Main.storyboard */,
 				1C93EE141B44E4A3008EE85C /* Images.xcassets */,
 				1C93EE161B44E4A3008EE85C /* LaunchScreen.xib */,
@@ -226,6 +233,7 @@
 			files = (
 				1C93EE101B44E4A3008EE85C /* ViewController.m in Sources */,
 				1C93EE0D1B44E4A3008EE85C /* AppDelegate.m in Sources */,
+				1C696AC61B4536F600A015B1 /* AUUCollectionViewLayout.m in Sources */,
 				1C93EE2F1B44E4C4008EE85C /* MyCollectionViewLayout.m in Sources */,
 				1C93EE0A1B44E4A3008EE85C /* main.m in Sources */,
 			);
@@ -424,6 +432,7 @@
 				1C93EE291B44E4A3008EE85C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1C93EE2A1B44E4A3008EE85C /* Build configuration list for PBXNativeTarget "WaterTestingTests" */ = {
 			isa = XCConfigurationList;
@@ -432,6 +441,7 @@
 				1C93EE2C1B44E4A3008EE85C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
