@@ -77,6 +77,26 @@
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reUsefulCollectionViewCell" forIndexPath:indexPath];
     
+    NSLog(@"%@",NSStringFromCGRect(cell.frame));
+    
+    CGRect rect = cell.frame;
+
+    CGFloat radius = 0;
+    
+    if (rect.size.width > rect.size.height)
+    {
+        radius = rect.size.height / 2.0;
+    }
+    else
+    {
+        radius = rect.size.width / 2.0;
+    }
+    
+    cell.layer.masksToBounds = YES;
+    cell.layer.borderColor = [UIColor whiteColor].CGColor;
+    cell.layer.borderWidth = 3;
+    cell.layer.cornerRadius = radius;
+    
     cell.backgroundColor = [UIColor colorWithRed:(arc4random() % 255 / 255.0) green:(arc4random() % 255 / 255.0) blue:(arc4random() % 255 / 255.0) alpha:1];
     
     return cell;
@@ -100,7 +120,7 @@
     
     if (excursion >= 0)
     {
-        NSLog(@"%@", @(excursion));
+//        NSLog(@"%@", @(excursion));
     }
 }
 

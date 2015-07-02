@@ -82,6 +82,9 @@
     
     UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
+    
+//    attributes.transform3D = CATransform3DMakeRotation(M_PI_4, 1, 1, 1);;
+    
     /**
      *  @author JyHu, 15-07-02 12:07:43
      *
