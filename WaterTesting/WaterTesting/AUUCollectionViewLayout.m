@@ -10,10 +10,31 @@
 
 @interface AUUCollectionViewLayout()
 
+/**
+ *  @author JyHu, 15-07-02 18:07:36
+ *
+ *  缓存每列的高度
+ *
+ *  @since  v 1.0
+ */
 @property (retain, nonatomic) NSMutableArray *p_yOriginsOfRowsArr;
 
+/**
+ *  @author JyHu, 15-07-02 18:07:24
+ *
+ *  每个cell的平均宽度
+ *
+ *  @since  v 1.0
+ */
 @property (assign, nonatomic) CGFloat p_itemWidth;
 
+/**
+ *  @author JyHu, 15-07-02 18:07:07
+ *
+ *  需要瀑布流的section有多少的cell
+ *
+ *  @since  v 1.0
+ */
 @property (assign, nonatomic) NSInteger p_cellCount;
 
 @end
@@ -55,6 +76,11 @@
 - (void)prepareLayout
 {
     [super prepareLayout];
+    
+    if (_layoutDelegate && [_layoutDelegate respondsToSelector:@selector(selectionIndexOfCollectionView:)])
+    {
+        _fallInSection = [_layoutDelegate selectionIndexOfCollectionView:self.collectionView];
+    }
     
     _p_cellCount = [self.collectionView numberOfItemsInSection:_fallInSection];
     
