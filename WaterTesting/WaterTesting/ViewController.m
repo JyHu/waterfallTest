@@ -161,6 +161,8 @@ AUUCollectionViewLayoutDelegate
     
     if (excursion >= 60)
     {
+        [(AUUCollectionViewLayout *)self.collectionView.collectionViewLayout resetLayout];
+        
         [self addDataSource];
         
         [self.collectionView reloadData];
