@@ -16,6 +16,7 @@
 		1C93EE181B44E4A3008EE85C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C93EE161B44E4A3008EE85C /* LaunchScreen.xib */; };
 		1C93EE241B44E4A3008EE85C /* WaterTestingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C93EE231B44E4A3008EE85C /* WaterTestingTests.m */; };
 		1C93EE2F1B44E4C4008EE85C /* MyCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C93EE2E1B44E4C4008EE85C /* MyCollectionViewLayout.m */; };
+		1CC981771B46798A005564BB /* CustomCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC981761B46798A005564BB /* CustomCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,8 @@
 		1C93EE231B44E4A3008EE85C /* WaterTestingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WaterTestingTests.m; sourceTree = "<group>"; };
 		1C93EE2D1B44E4C4008EE85C /* MyCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCollectionViewLayout.h; sourceTree = "<group>"; };
 		1C93EE2E1B44E4C4008EE85C /* MyCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCollectionViewLayout.m; sourceTree = "<group>"; };
+		1CC981751B46798A005564BB /* CustomCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCollectionViewCell.h; sourceTree = "<group>"; };
+		1CC981761B46798A005564BB /* CustomCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +95,8 @@
 				1C93EE0C1B44E4A3008EE85C /* AppDelegate.m */,
 				1C93EE0E1B44E4A3008EE85C /* ViewController.h */,
 				1C93EE0F1B44E4A3008EE85C /* ViewController.m */,
+				1CC981751B46798A005564BB /* CustomCollectionViewCell.h */,
+				1CC981761B46798A005564BB /* CustomCollectionViewCell.m */,
 				1C93EE2D1B44E4C4008EE85C /* MyCollectionViewLayout.h */,
 				1C93EE2E1B44E4C4008EE85C /* MyCollectionViewLayout.m */,
 				1C696AC41B4536F600A015B1 /* AUUCollectionViewLayout.h */,
@@ -234,6 +239,7 @@
 				1C93EE101B44E4A3008EE85C /* ViewController.m in Sources */,
 				1C93EE0D1B44E4A3008EE85C /* AppDelegate.m in Sources */,
 				1C696AC61B4536F600A015B1 /* AUUCollectionViewLayout.m in Sources */,
+				1CC981771B46798A005564BB /* CustomCollectionViewCell.m in Sources */,
 				1C93EE2F1B44E4C4008EE85C /* MyCollectionViewLayout.m in Sources */,
 				1C93EE0A1B44E4A3008EE85C /* main.m in Sources */,
 			);

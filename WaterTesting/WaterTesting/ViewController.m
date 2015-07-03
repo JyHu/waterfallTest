@@ -10,6 +10,7 @@
 #import "MyCollectionViewLayout.h"
 #import "AUUCollectionViewLayout.h"
 #import "Control.h"
+#import "CustomCollectionViewCell.h"
 
 @interface ViewController ()
 <
@@ -51,7 +52,7 @@ AUUCollectionViewLayoutDelegate
     {
         [_dataSource addObject:@"1"];
         
-        CGFloat itemHeight = arc4random()%200 + 20;
+        CGFloat itemHeight = arc4random()%200 + 30;
         [_itemHeights addObject:@(itemHeight)];
     }
 }
@@ -71,7 +72,7 @@ AUUCollectionViewLayoutDelegate
     _collectionView = [[UICollectionView alloc] initWithFrame:rect collectionViewLayout:layout];
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
-    [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"reUsefulCollectionViewCell"];
+    [_collectionView registerClass:[CustomCollectionViewCell class] forCellWithReuseIdentifier:@"reUsefulCollectionViewCell"];
     [self.view addSubview:_collectionView];
 }
 
@@ -89,7 +90,7 @@ AUUCollectionViewLayoutDelegate
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reUsefulCollectionViewCell" forIndexPath:indexPath];
+    CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reUsefulCollectionViewCell" forIndexPath:indexPath];
     
 //    NSLog(@"%@",NSStringFromCGRect(cell.frame));
     
@@ -112,7 +113,15 @@ AUUCollectionViewLayoutDelegate
 //    cell.layer.borderWidth = 3;
 //    cell.layer.cornerRadius = radius;
     
-    cell.backgroundColor = [UIColor colorWithRed:(arc4random() % 255 / 255.0) green:(arc4random() % 255 / 255.0) blue:(arc4random() % 255 / 255.0) alpha:1];
+    CGFloat r = (indexPath.row * 1) % 255;
+    CGFloat g = (indexPath.row * 2) % 255;
+    CGFloat b = (indexPath.row * 3) % 255;
+    
+    [cell.label setText:[NSString stringWithFormat:@"%@\nr:%@ g:%@ b:%@",@(indexPath.row), @(r), @(g), @(b)]];
+    
+    cell.label.frame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height);
+    
+    cell.backgroundColor = [UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:1];
     
     return cell;
 }
