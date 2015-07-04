@@ -64,6 +64,9 @@
  */
 @property (assign, nonatomic) NSInteger         p_reloadBeginIndex;
 
+
+@property (assign, nonatomic) UIDeviceOrientation   lastOrientation;
+
 @end
 
 @implementation AUUCollectionViewLayout
@@ -93,6 +96,7 @@
         _p_layoutAttributes = [[NSMutableArray alloc] init];
         _fallInSection = 0;
         _p_reloadBeginIndex = 0;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return self;
 }
@@ -102,6 +106,8 @@
 - (void)prepareLayout
 {
     [super prepareLayout];
+    
+    _lastOrientation = [[UIDevice currentDevice] orientation];
     
     _p_contentSize = self.collectionView.frame.size;
     
@@ -362,6 +368,25 @@
  
     // 必须在有效的范围内
     _fallInSection = ((fallInSection > 0 && fallInSection < secs) ? fallInSection : 0);
+}
+
+#pragma mark - Device orientation did changed notification
+
+- (void)deviceOrientationDidChanged:(NSNotification *)notify
+{
+    UIDevice *device = (UIDevice *)notify.object;
+    
+    if (_lastOrientation == 0)
+    {
+        return;
+    }
+    if (_lastOrientation != device.orientation)
+    {
+        _p_reloadBeginIndex = 0;
+        [self.collectionView reloadData];
+    }
+    
+    NSLog(@"%@ - %@", @(_lastOrientation),@(device.orientation));
 }
 
 @end

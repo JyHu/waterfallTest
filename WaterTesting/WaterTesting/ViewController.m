@@ -68,10 +68,11 @@ AUUCollectionViewLayoutDelegate
     layout.layoutDelegate = self;
 #endif
     
-    CGRect rect = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
-    _collectionView = [[UICollectionView alloc] initWithFrame:rect collectionViewLayout:layout];
+//    CGRect rect = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
+    _collectionView = [[UICollectionView alloc] initWithFrame:[UIScreen mainScreen].bounds collectionViewLayout:layout];
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
+    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [_collectionView registerClass:[CustomCollectionViewCell class] forCellWithReuseIdentifier:@"reUsefulCollectionViewCell"];
     [self.view addSubview:_collectionView];
 }
