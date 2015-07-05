@@ -10,10 +10,12 @@ Thank you .
 ##类的说明
 * `MyCollectionViewLayout`这个类是我根据帖子写的。
 * `AUUCollectionViewLayout`这个类是自己学习后封装的，实现了多列瀑布流，加上一些缓存的设置，在每次追加数据的时候减少了计算的过程。
-* 必须要实现的`AUUCollectionViewLayoutDelegate`代理方法
-```
-collectionView:collectionViewLayout:sizeOfItemAtIndexPath
-shouldCollectionViewRotationWhenDeviceOrientationWillChange:collectionViewLayout:device:
-```
+
+
+## 必须要实现的`AUUCollectionViewLayoutDelegate`代理方法
+
+*  设置cell的大小的代理方法`collectionView:collectionViewLayout:sizeOfItemAtIndexPath`
+* 当屏幕旋转的时候用来请求判断是否需要重置collectionView的布局的代理方法`shouldCollectionViewRotationWhenDeviceOrientationWillChange:collectionViewLayout:device:`
+
 
 
