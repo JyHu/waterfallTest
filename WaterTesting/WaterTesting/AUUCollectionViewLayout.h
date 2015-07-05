@@ -27,7 +27,26 @@
  *
  *  @since  v 1.0
  */
-- (CGSize)collectionView:(UICollectionView *)collectionView collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout sizeOfItemAtIndexPath:(NSIndexPath *)indexPath;
+- (CGSize)collectionView:(UICollectionView *)collectionView
+    collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout
+   sizeOfItemAtIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ *  @author JyHu, 15-07-05 19:07:54
+ *
+ *  当设备的方向发生旋转的时候，判断是否需要进行collectionView的重新布局
+ *
+ *  @param collectionView       当前布局所在的collectionView
+ *  @param collectionViewLayout 当前的布局
+ *  @param device               当前的设备，可以获取设备的方向等信息
+ *
+ *  @return BOOL值，如果真则重新布局
+ *
+ *  @since  v 1.0
+ */
+- (BOOL)shouldCollectionViewRotationWhenDeviceOrientationWillChange:(UICollectionView *)collectionView
+                                               collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout
+                                                             device:(UIDevice *)device;
 
 @end
 

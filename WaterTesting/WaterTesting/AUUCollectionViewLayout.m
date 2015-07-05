@@ -65,8 +65,6 @@
 @property (assign, nonatomic) NSInteger         p_reloadBeginIndex;
 
 
-@property (assign, nonatomic) UIDeviceOrientation   lastOrientation;
-
 @end
 
 @implementation AUUCollectionViewLayout
@@ -106,9 +104,7 @@
 - (void)prepareLayout
 {
     [super prepareLayout];
-    
-    _lastOrientation = [[UIDevice currentDevice] orientation];
-    
+        
     _p_contentSize = self.collectionView.frame.size;
     
     _p_cellCount = [self.collectionView numberOfItemsInSection:_fallInSection];
@@ -374,19 +370,17 @@
 
 - (void)deviceOrientationDidChanged:(NSNotification *)notify
 {
-    UIDevice *device = (UIDevice *)notify.object;
-    
-    if (_lastOrientation == 0)
+    if (self.layoutDelegate && [self.layoutDelegate respondsToSelector:@selector(shouldCollectionViewRotationWhenDeviceOrientationWillChange:collectionViewLayout:device:)])
     {
-        return;
+        BOOL rotation = [self.layoutDelegate shouldCollectionViewRotationWhenDeviceOrientationWillChange:self.collectionView collectionViewLayout:self device:(UIDevice *)notify.object];
+        
+        if (rotation)
+        {
+            _p_reloadBeginIndex = 0;
+            
+            [self.collectionView reloadData];
+        }
     }
-    if (_lastOrientation != device.orientation)
-    {
-        _p_reloadBeginIndex = 0;
-        [self.collectionView reloadData];
-    }
-    
-    NSLog(@"%@ - %@", @(_lastOrientation),@(device.orientation));
 }
 
 @end

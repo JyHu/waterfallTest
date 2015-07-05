@@ -136,6 +136,11 @@ AUUCollectionViewLayoutDelegate
     return CGSizeMake((SCREEN_WIDTH - 30) / 2.0, [_itemHeights[indexPath.row] floatValue]);
 }
 
+- (BOOL)shouldCollectionViewRotationWhenDeviceOrientationWillChange:(UICollectionView *)collectionView collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout device:(UIDevice *)device
+{
+    return YES;
+}
+
 #else
 
 #pragma mark - MyCollectionViewLayoutDelegate
