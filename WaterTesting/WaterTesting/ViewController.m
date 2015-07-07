@@ -68,7 +68,6 @@ AUUCollectionViewLayoutDelegate
     layout.layoutDelegate = self;
 #endif
     
-//    CGRect rect = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
     _collectionView = [[UICollectionView alloc] initWithFrame:[UIScreen mainScreen].bounds collectionViewLayout:layout];
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
@@ -92,27 +91,6 @@ AUUCollectionViewLayoutDelegate
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CustomCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"reUsefulCollectionViewCell" forIndexPath:indexPath];
-    
-//    NSLog(@"%@",NSStringFromCGRect(cell.frame));
-    
-    
-//    CGRect rect = cell.frame;
-//
-//    CGFloat radius = 0;
-//    
-//    if (rect.size.width > rect.size.height)
-//    {
-//        radius = rect.size.height / 2.0;
-//    }
-//    else
-//    {
-//        radius = rect.size.width / 2.0;
-//    }
-//    
-//    cell.layer.masksToBounds = YES;
-//    cell.layer.borderColor = [UIColor whiteColor].CGColor;
-//    cell.layer.borderWidth = 3;
-//    cell.layer.cornerRadius = radius;
     
     CGFloat r = (indexPath.row * 1) % 255;
     CGFloat g = (indexPath.row * 2) % 255;
@@ -154,19 +132,6 @@ AUUCollectionViewLayoutDelegate
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    CGPoint offset = scrollView.contentOffset;
-    CGSize size = scrollView.contentSize;
-    
-    CGFloat excursion = scrollView.frame.size.height - (size.height - offset.y);
-    
-    if (excursion >= 0)
-    {
-//        NSLog(@"%@", @(excursion));
-    }
-}
-
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     CGPoint offset = scrollView.contentOffset;
@@ -176,9 +141,9 @@ AUUCollectionViewLayoutDelegate
     
     if (excursion >= 60)
     {
-        [(AUUCollectionViewLayout *)self.collectionView.collectionViewLayout resetLayout];
-        
         [self addDataSource];
+        
+        [(AUUCollectionViewLayout *)self.collectionView.collectionViewLayout resetLayout];
         
         [self.collectionView reloadData];
     }

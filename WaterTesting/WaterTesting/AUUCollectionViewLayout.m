@@ -64,7 +64,6 @@
  */
 @property (assign, nonatomic) NSInteger         p_reloadBeginIndex;
 
-
 @end
 
 @implementation AUUCollectionViewLayout
@@ -90,11 +89,16 @@
     {
         _numberOfRows = 2;
         _interval = 10;
-        _p_yOriginsOfRowsArr = [[NSMutableArray alloc] init];
-        _p_layoutAttributes = [[NSMutableArray alloc] init];
         _fallInSection = 0;
         _p_reloadBeginIndex = 0;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        
+        _p_yOriginsOfRowsArr = [[NSMutableArray alloc] init];
+        _p_layoutAttributes = [[NSMutableArray alloc] init];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(deviceOrientationDidChanged:)
+                                                     name:UIDeviceOrientationDidChangeNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -205,7 +209,9 @@
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {    
-    CGSize itemSize = [self.layoutDelegate collectionView:self.collectionView collectionViewLayout:self sizeOfItemAtIndexPath:indexPath];
+    CGSize itemSize = [self.layoutDelegate collectionView:self.collectionView
+                                     collectionViewLayout:self
+                                    sizeOfItemAtIndexPath:indexPath];
     
     /**
      *  @author JyHu, 15-07-03 10:07:34
@@ -228,7 +234,6 @@
     NSInteger row = [self shorterRowIndex];
     
     CGFloat x = _interval * (row + 1) + _p_itemWidth * row;
-    
     CGFloat y = [[_p_yOriginsOfRowsArr objectAtIndex:row] floatValue];
     
     /**
@@ -362,7 +367,13 @@
 {
     NSInteger secs = [self.collectionView numberOfSections];
  
-    // 必须在有效的范围内
+    /**
+     *  @author JyHu, 15-07-07 17:07:04
+     *
+     *  必须在有效的范围内
+     *
+     *  @since  v 1.0
+     */
     _fallInSection = ((fallInSection > 0 && fallInSection < secs) ? fallInSection : 0);
 }
 
@@ -372,10 +383,24 @@
 {
     if (self.layoutDelegate && [self.layoutDelegate respondsToSelector:@selector(shouldCollectionViewRotationWhenDeviceOrientationWillChange:collectionViewLayout:device:)])
     {
+        /**
+         *  @author JyHu, 15-07-07 17:07:47
+         *
+         *  当屏幕发生旋转的时候，通知CollectionView所在的Viewcontroller，并返回是否需要重新布局瀑布流
+         *
+         *  @since  v 1.0
+         */
         BOOL rotation = [self.layoutDelegate shouldCollectionViewRotationWhenDeviceOrientationWillChange:self.collectionView collectionViewLayout:self device:(UIDevice *)notify.object];
         
         if (rotation)
         {
+            /**
+             *  @author JyHu, 15-07-07 17:07:35
+             *
+             *  重置记录的布局开始位置
+             *
+             *  @since  v 1.0
+             */
             _p_reloadBeginIndex = 0;
             
             [self.collectionView reloadData];
