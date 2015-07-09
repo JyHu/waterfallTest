@@ -26,6 +26,10 @@ AUUCollectionViewLayoutDelegate
 
 @property (strong, nonatomic) NSMutableArray *itemHeights;
 
+#ifdef MoreRows
+@property (assign, nonatomic) AUUCollectionViewDirection direction;
+#endif
+
 @end
 
 @implementation ViewController
@@ -33,6 +37,11 @@ AUUCollectionViewLayoutDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+#ifdef MoreRows
+    self.direction = AUUCollectionViewDirectionHorizontal;
+#endif
+    
     
     [self initializeDataSource];
     [self initializeUserInterface];
@@ -48,7 +57,7 @@ AUUCollectionViewLayoutDelegate
 
 - (void)addDataSource
 {
-    for (NSInteger i = 0; i < 20 ; i ++)
+    for (NSInteger i = 0; i < 2 ; i ++)
     {
         [_dataSource addObject:@"1"];
         
@@ -63,6 +72,7 @@ AUUCollectionViewLayoutDelegate
     AUUCollectionViewLayout *layout = [[AUUCollectionViewLayout alloc] init];
     layout.numberOfRows = 4;
     layout.layoutDelegate = self;
+    layout.collectionViewDirection = self.direction;
 #else
     MyCollectionViewLayout *layout = [[MyCollectionViewLayout alloc] init];
     layout.layoutDelegate = self;
@@ -111,7 +121,14 @@ AUUCollectionViewLayoutDelegate
 
 - (CGSize)collectionView:(UICollectionView *)collectionView collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout sizeOfItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake((SCREEN_WIDTH - 30) / 2.0, [_itemHeights[indexPath.row] floatValue]);
+    if (self.direction == AUUCollectionViewDirectionVertical)
+    {
+        return CGSizeMake((SCREEN_WIDTH - 30) / 2.0, [_itemHeights[indexPath.row] floatValue]);
+    }
+    else
+    {
+        return CGSizeMake([_itemHeights[indexPath.row] floatValue], (SCREEN_WIDTH - 30) / 2.0);
+    }
 }
 
 - (BOOL)shouldCollectionViewRotationWhenDeviceOrientationWillChange:(UICollectionView *)collectionView collectionViewLayout:(AUUCollectionViewLayout *)collectionViewLayout device:(UIDevice *)device
@@ -137,9 +154,21 @@ AUUCollectionViewLayoutDelegate
     CGPoint offset = scrollView.contentOffset;
     CGSize size = scrollView.contentSize;
     
-    CGFloat excursion = scrollView.frame.size.height - (size.height - offset.y);
+    CGFloat excursion;
+#ifdef MoreRows
+    if (self.direction == AUUCollectionViewDirectionVertical)
+    {
+#endif
+        excursion = scrollView.frame.size.height - (size.height - offset.y);
+#ifdef MoreRows
+    }
+    else
+    {
+        excursion = scrollView.frame.size.width - (size.width - offset.x);
+    }
+#endif
     
-    if (excursion >= 60)
+    if (excursion >= 30)
     {
         [self addDataSource];
         
@@ -147,6 +176,11 @@ AUUCollectionViewLayoutDelegate
         
         [self.collectionView reloadData];
     }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
 }
 
 - (void)didReceiveMemoryWarning {

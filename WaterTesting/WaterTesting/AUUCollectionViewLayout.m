@@ -17,7 +17,7 @@
  *
  *  @since  v 1.0
  */
-@property (retain, nonatomic) NSMutableArray    *p_yOriginsOfRowsArr;
+@property (retain, nonatomic) NSMutableArray    *p_distanceOfRowsArr;
 
 /**
  *  @author JyHu, 15-07-02 18:07:24
@@ -75,7 +75,7 @@
 
 @synthesize p_contentSize       = _p_contentSize;
 @synthesize p_itemWidth         = _p_itemWidth;
-@synthesize p_yOriginsOfRowsArr = _p_yOriginsOfRowsArr;
+@synthesize p_distanceOfRowsArr = _p_distanceOfRowsArr;
 @synthesize p_cellCount         = _p_cellCount;
 @synthesize p_layoutAttributes  = _p_layoutAttributes;
 @synthesize p_reloadBeginIndex  = _p_reloadBeginIndex;
@@ -92,8 +92,10 @@
         _fallInSection = 0;
         _p_reloadBeginIndex = 0;
         
-        _p_yOriginsOfRowsArr = [[NSMutableArray alloc] init];
+        _p_distanceOfRowsArr = [[NSMutableArray alloc] init];
         _p_layoutAttributes = [[NSMutableArray alloc] init];
+        
+        self.collectionViewDirection = AUUCollectionViewDirectionVertical;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(deviceOrientationDidChanged:)
@@ -120,14 +122,14 @@
      *
      *  @since  v 1.0
      */
-    _p_itemWidth = (_p_contentSize.width - (_numberOfRows + 1) * _interval) / (_numberOfRows * 1.0);
+    _p_itemWidth = ((self.collectionViewDirection == AUUCollectionViewDirectionVertical ? _p_contentSize.width : _p_contentSize.height) - (_numberOfRows + 1) * _interval) / (_numberOfRows * 1.0);
 }
 
 - (CGSize)collectionViewContentSize
 {
-    CGFloat maxY;
+    CGFloat maxDistance;
     
-    if (_p_yOriginsOfRowsArr && [_p_yOriginsOfRowsArr count] != 0)
+    if (_p_distanceOfRowsArr && [_p_distanceOfRowsArr count] != 0)
     {
         /**
          *  @author JyHu, 15-07-03 10:07:41
@@ -136,10 +138,10 @@
          *
          *  @since  v 1.0
          */
-        maxY = [[_p_yOriginsOfRowsArr objectAtIndex:[self higherRowIndex]] floatValue];
+        maxDistance = [[_p_distanceOfRowsArr objectAtIndex:[self higherRowIndex]] floatValue];
     }
     
-    if (maxY < _p_contentSize.height)
+    if (maxDistance < (self.collectionViewDirection == AUUCollectionViewDirectionVertical ? _p_contentSize.height : _p_contentSize.width))
     {
         /**
          *  @author JyHu, 15-07-03 10:07:22
@@ -148,10 +150,12 @@
          *
          *  @since  v 1.0
          */
-        maxY = _p_contentSize.height + 1;
+        maxDistance = (self.collectionViewDirection == AUUCollectionViewDirectionVertical ? _p_contentSize.height : _p_contentSize.width) + 1;
     }
     
-    return CGSizeMake(_p_contentSize.width, maxY);
+    return (self.collectionViewDirection == AUUCollectionViewDirectionVertical ?
+                            CGSizeMake(_p_contentSize.width, maxDistance) :
+                            CGSizeMake(maxDistance, _p_contentSize.height));
 }
 
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
@@ -163,9 +167,9 @@
      *
      *  @since  v 1.0
      */
-    if (_p_yOriginsOfRowsArr && _p_reloadBeginIndex == 0 && _p_layoutAttributes)
+    if (_p_distanceOfRowsArr && _p_reloadBeginIndex == 0 && _p_layoutAttributes)
     {
-        [_p_yOriginsOfRowsArr removeAllObjects];
+        [_p_distanceOfRowsArr removeAllObjects];
         [_p_layoutAttributes removeAllObjects];
         
         /**
@@ -177,7 +181,7 @@
          */
         for (NSInteger i = 0; i < self.numberOfRows; i ++)
         {
-            [_p_yOriginsOfRowsArr addObject:@(_interval)];
+            [_p_distanceOfRowsArr addObject:@(_interval)];
         }
     }
     
@@ -220,7 +224,16 @@
      *
      *  @since  v 1.0
      */
-    CGFloat itemHeight = floorf(itemSize.height * self.p_itemWidth / itemSize.width);
+    CGFloat itemLength;
+    
+    if (self.collectionViewDirection == AUUCollectionViewDirectionVertical)
+    {
+        itemLength = floorf(itemSize.height * self.p_itemWidth / itemSize.width);
+    }
+    else
+    {
+        itemLength = floor(itemSize.width * self.p_itemWidth / itemSize.height);
+    }
     
     UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
@@ -233,8 +246,22 @@
      */
     NSInteger row = [self shorterRowIndex];
     
-    CGFloat x = _interval * (row + 1) + _p_itemWidth * row;
-    CGFloat y = [[_p_yOriginsOfRowsArr objectAtIndex:row] floatValue];
+    CGFloat x ;     //  x坐标
+    CGFloat y;      //  y坐标
+    CGFloat ud;     //  设置后更新的距离
+    
+    if (self.collectionViewDirection == AUUCollectionViewDirectionVertical)
+    {
+        x = _interval * (row + 1) + _p_itemWidth * row;
+        y = [[_p_distanceOfRowsArr objectAtIndex:row] floatValue];
+        ud = y + _interval + itemLength;
+    }
+    else
+    {
+        x = [[_p_distanceOfRowsArr objectAtIndex:row] floatValue];
+        y = _interval * (row + 1) + _p_itemWidth * row;
+        ud = x + _interval + itemLength;
+    }
     
     /**
      *  @author JyHu, 15-07-03 10:07:59
@@ -245,9 +272,20 @@
      *
      *  @since  v 1.0
      */
-    [self updateYOrigin:(y + _interval + itemHeight) inRow:row];
+    [self updateRowDistance:ud inRow:row];
     
-    attributes.frame = CGRectMake(x, y, _p_itemWidth, itemHeight);
+    CGRect finalFrame = CGRectMake(x, y, 0, 0);
+    
+    if (self.collectionViewDirection == AUUCollectionViewDirectionVertical)
+    {
+        finalFrame.size = CGSizeMake(_p_itemWidth, itemLength);
+    }
+    else
+    {
+        finalFrame.size = CGSizeMake(itemLength, _p_itemWidth);
+    }
+    
+    attributes.frame = finalFrame;
     
     return attributes;
 }
@@ -274,10 +312,10 @@
 {
     NSInteger row = 0;
     
-    for (NSInteger index = 1; index < _p_yOriginsOfRowsArr.count; index ++)
+    for (NSInteger index = 1; index < _p_distanceOfRowsArr.count; index ++)
     {
-        CGFloat y1 = [[_p_yOriginsOfRowsArr objectAtIndex:row] floatValue];
-        CGFloat y2 = [[_p_yOriginsOfRowsArr objectAtIndex:index] floatValue];
+        CGFloat y1 = [[_p_distanceOfRowsArr objectAtIndex:row] floatValue];
+        CGFloat y2 = [[_p_distanceOfRowsArr objectAtIndex:index] floatValue];
         
         if (y1 < y2)
         {
@@ -301,10 +339,10 @@
 {
     NSInteger row = 0;
     
-    for (NSInteger index = 1; index < _p_yOriginsOfRowsArr.count; index ++)
+    for (NSInteger index = 1; index < _p_distanceOfRowsArr.count; index ++)
     {
-        CGFloat y1 = [[_p_yOriginsOfRowsArr objectAtIndex:row] floatValue];
-        CGFloat y2 = [[_p_yOriginsOfRowsArr objectAtIndex:index] floatValue];
+        CGFloat y1 = [[_p_distanceOfRowsArr objectAtIndex:row] floatValue];
+        CGFloat y2 = [[_p_distanceOfRowsArr objectAtIndex:index] floatValue];
         
         if (y1 > y2)
         {
@@ -325,11 +363,11 @@
  *
  *  @since  v 1.0
  */
-- (void)updateYOrigin:(CGFloat)y inRow:(NSInteger)row
+- (void)updateRowDistance:(CGFloat)y inRow:(NSInteger)row
 {
-    if (_p_yOriginsOfRowsArr && row < _p_yOriginsOfRowsArr.count)
+    if (_p_distanceOfRowsArr && row < _p_distanceOfRowsArr.count)
     {
-        [_p_yOriginsOfRowsArr replaceObjectAtIndex:row withObject:@(y)];
+        [_p_distanceOfRowsArr replaceObjectAtIndex:row withObject:@(y)];
     }
 }
 

@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-
+typedef NS_ENUM(NSUInteger, AUUCollectionViewDirection) {
+    AUUCollectionViewDirectionHorizontal,
+    AUUCollectionViewDirectionVertical,
+};
 
 @class AUUCollectionViewLayout;
 
@@ -89,6 +92,15 @@
  *  @since  v 1.0
  */
 @property (assign, nonatomic) NSInteger fallInSection;
+
+/**
+ *  @author JyHu, 15-07-10 00:40:17
+ *
+ *  瀑布流布局的方向
+ *
+ *  @since  v 1.0
+ */
+@property (assign, nonatomic) AUUCollectionViewDirection collectionViewDirection;
 
 /**
  *  @author JyHu, 15-07-03 10:07:49
