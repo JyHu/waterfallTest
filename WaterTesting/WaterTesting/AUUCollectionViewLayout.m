@@ -62,7 +62,7 @@
  *
  *  @since  v 1.0
  */
-@property (assign, nonatomic) NSInteger         p_reloadBeginIndex;
+@property (assign, nonatomic) NSIndexPath         *p_reloadBeginIndex;
 
 @end
 
@@ -90,7 +90,7 @@
         _numberOfRows = 2;
         _interval = 10;
         _fallInSection = 0;
-        _p_reloadBeginIndex = 0;
+        _p_reloadBeginIndex = [NSIndexPath indexPathForRow:0 inSection:0];
         
         _p_distanceOfRowsArr = [[NSMutableArray alloc] init];
         _p_layoutAttributes = [[NSMutableArray alloc] init];
@@ -160,6 +160,9 @@
 
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
+    NSInteger t_maxSection = self.collectionView.numberOfSections - 1;
+    NSInteger t_maxRowsInMaxSection = [self.collectionView numberOfItemsInSection:t_maxSection] - 1;
+    
     /**
      *  @author JyHu, 15-07-03 10:07:24
      *
@@ -167,7 +170,7 @@
      *
      *  @since  v 1.0
      */
-    if (_p_distanceOfRowsArr && _p_reloadBeginIndex == 0 && _p_layoutAttributes)
+    if (_p_distanceOfRowsArr && _p_reloadBeginIndex.section == 0 && _p_reloadBeginIndex.row == 0 && _p_layoutAttributes)
     {
         [_p_distanceOfRowsArr removeAllObjects];
         [_p_layoutAttributes removeAllObjects];
@@ -192,12 +195,21 @@
      *
      *  @since  v 1.0
      */
-    for (NSInteger i = _p_reloadBeginIndex ; i< self.p_cellCount; i++)
+    for (NSInteger i = _p_reloadBeginIndex.section; i <= t_maxSection; i++)
     {
-        NSIndexPath *indexpath = [NSIndexPath indexPathForRow:i inSection:self.fallInSection];
-        
-        [_p_layoutAttributes addObject:[self layoutAttributesForItemAtIndexPath:indexpath]];
+        for (NSInteger j = _p_reloadBeginIndex.row; j < [self.collectionView numberOfItemsInSection:i]; j++)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
+            
+            [_p_layoutAttributes addObject:[self layoutAttributesForItemAtIndexPath:indexPath]];
+        }
     }
+//    for (NSInteger i = _p_reloadBeginIndex ; i< self.p_cellCount; i++)
+//    {
+//        NSIndexPath *indexpath = [NSIndexPath indexPathForRow:i inSection:self.fallInSection];
+//        
+//        [_p_layoutAttributes addObject:[self layoutAttributesForItemAtIndexPath:indexpath]];
+//    }
     
     /**
      *  @author JyHu, 15-07-03 10:07:40
@@ -206,13 +218,15 @@
      *
      *  @since  v 1.0
      */
-    _p_reloadBeginIndex = _p_cellCount;
+    _p_reloadBeginIndex = [NSIndexPath indexPathForRow:t_maxRowsInMaxSection inSection:t_maxSection];
     
     return _p_layoutAttributes;
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
-{    
+{
+    NSLog(@"%@,%@ - %@,%@", @(self.p_reloadBeginIndex.section), @(self.p_reloadBeginIndex.row), @(indexPath.section), @(indexPath.row));
+    
     CGSize itemSize = [self.layoutDelegate collectionView:self.collectionView
                                      collectionViewLayout:self
                                     sizeOfItemAtIndexPath:indexPath];
@@ -294,7 +308,7 @@
 
 - (void)resetLayout
 {
-    _p_reloadBeginIndex = 0;
+    _p_reloadBeginIndex = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
 #pragma mark - help methods
@@ -439,7 +453,7 @@
              *
              *  @since  v 1.0
              */
-            _p_reloadBeginIndex = 0;
+            _p_reloadBeginIndex = [NSIndexPath indexPathForRow:0 inSection:0];
             
             [self.collectionView reloadData];
         }

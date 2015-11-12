@@ -39,7 +39,7 @@ AUUCollectionViewLayoutDelegate
     // Do any additional setup after loading the view, typically from a nib.
     
 #ifdef MoreRows
-    self.direction = AUUCollectionViewDirectionHorizontal;
+    self.direction = AUUCollectionViewDirectionVertical;
 #endif
     
     
@@ -172,7 +172,7 @@ AUUCollectionViewLayoutDelegate
     {
         [self addDataSource];
         
-        [(AUUCollectionViewLayout *)self.collectionView.collectionViewLayout resetLayout];
+//        [(AUUCollectionViewLayout *)self.collectionView.collectionViewLayout resetLayout];
         
         [self.collectionView reloadData];
     }
